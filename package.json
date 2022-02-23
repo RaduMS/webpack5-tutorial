@@ -1,0 +1,25 @@
+{
+  "name": "webpack-5 - The-complete-guide-for-beginners",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaduMS/webpack5-tutorial.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RaduMS/webpack5-tutorial/issues"
+  },
+  "homepage": "https://github.com/RaduMS/webpack5-tutorial#readme",
+  "dependencies": {
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
+  }
+}
