@@ -1,6 +1,6 @@
-import banana from './banana.png';
-import bananaTTF from './banana.ttf';
-import bananaText from './textFile.txt'
+import banana from './components/banana-images/banana.png';
+import bananaTTF from './components/banana-images/banana.ttf';
+import bananaText from './components/banana-images/textFile.txt'
 
 function addImage () {
     const img = document.createElement('img');
