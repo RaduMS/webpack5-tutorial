@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:prod": "webpack --config webpack.production.config.js",
-    "build:dev": "webpack serve --config webpack.dev.config.js --hot"
+    "build:dev": "webpack serve --config webpack.dev.config.js --hot",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
+    "express": "^4.17.3",
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "react": "^17.0.2"
