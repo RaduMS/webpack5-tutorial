@@ -1,31 +1,21 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
-    entry: {
-        'hello-world': './src/hello-world.js',
-        'banana-image': './src/banana-image.js'
-    },
+    entry: './src/banana-image.js',
     output: {
-        filename: '[name].js',
+        filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: ''
+        publicPath: '/static/'
     },
-    mode: 'development',
+    mode: 'production',
     optimization: {
         splitChunks: {
-            chunks: "all"
-        }
-    },
-    devServer: {
-        port: 9000,
-        static: {
-            directory: path.resolve(__dirname, './dist')
-        },
-        devMiddleware: {
-            index: 'hello-world.html',
-            writeToDisk: true
+            chunks: "all",
+            minSize: 1000
         }
     },
     module: {
@@ -44,15 +34,9 @@ module.exports = {
                 type: 'asset/source'
             },
             {
-                test: /\.css$/,
-                use: [
-                    'style-loader', 'css-loader'
-                ]
-            },
-            {
                 test: /\.scss$/,
                 use: [
-                    'style-loader', 'css-loader', 'sass-loader'
+                    MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'
                 ]
             },
             {
@@ -62,7 +46,7 @@ module.exports = {
                     loader: "babel-loader",
                     options: {
                         presets: ["@babel/env"],
-                        plugins: ["@babel/plugin-proposal-class-properties"]
+                        // plugins: ["@babel/plugin-proposal-class-properties"]
                     }
                 }
             },
@@ -75,20 +59,22 @@ module.exports = {
         ]
     },
     plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].[contenthash].css'
+        }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            filename: "hello-world.html",
-            chunks: ['hello-world'],
-            title: "Hello world!",
-            template: "src/page-template.hbs",
-            description: "Hello world!"
-        }),
-        new HtmlWebpackPlugin({
-            filename: "banana-images.html",
-            chunks: ['banana-image'],
+            filename: "banana-image.html",
             title: "Bananas",
             template: "src/page-template.hbs",
-            description: "Some bananas"
+            description: "Some bananas",
+            minify: false
         }),
+        new ModuleFederationPlugin({
+            name: 'BananaApp',
+            remotes: {
+                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/static/remoteEntry.js'
+            }
+        })
     ]
 };

@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:prod": "webpack --config webpack.production.config.js",
-    "build:dev": "webpack serve --config webpack.dev.config.js --hot"
+    "build:prod": "../node_modules/.bin/webpack --config webpack.production.config.js",
+    "build:dev": "../node_modules/.bin/webpack serve --config webpack.dev.config.js --hot",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",

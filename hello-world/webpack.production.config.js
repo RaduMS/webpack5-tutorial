@@ -2,16 +2,14 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
-    entry: {
-        'hello-world': './src/hello-world.js',
-        'banana-image': './src/banana-image.js'
-    },
+    entry: './src/hello-world.js',
     output: {
         filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: ''
+        publicPath: 'http://localhost:9001/static/'
     },
     mode: 'production',
     optimization: {
@@ -22,19 +20,6 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                test: /\.(png|jpg|ttf)$/,
-                type: 'asset',
-                parser: {
-                    dataUrlCondition: {
-                        maxSize: 3 * 1024
-                    }
-                }
-            },
-            {
-                test: /\.txt/,
-                type: 'asset/source'
-            },
             {
                 test: /\.css$/,
                 use: [
@@ -73,19 +58,17 @@ module.exports = {
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             filename: "hello-world.html",
-            chunks: ['hello-world'],
             title: "Hello world!",
             template: "src/page-template.hbs",
             description: "Hello world!",
             minify: false
         }),
-        new HtmlWebpackPlugin({
-            filename: "banana-images.html",
-            chunks: ['banana-image'],
-            title: "Bananas",
-            template: "src/page-template.hbs",
-            description: "Some bananas",
-            minify: false
-        }),
+        new ModuleFederationPlugin({
+            name: 'HelloWorldApp',
+            filename: 'remoteEntry.js',
+            exposes: {
+                './HelloWorldButton': './src/components/hello-world-button/hello-world-button.js'
+            }
+        })
     ]
 };
