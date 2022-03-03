@@ -9,7 +9,7 @@ module.exports = {
     output: {
         filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/static/'
+        publicPath: 'http://localhost:9002/static/'
     },
     mode: 'production',
     optimization: {
@@ -72,8 +72,9 @@ module.exports = {
         }),
         new ModuleFederationPlugin({
             name: 'BananaApp',
-            remotes: {
-                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/static/remoteEntry.js'
+            filename: 'remoteEntry.js',
+            exposes: {
+                './BananaPage': './src/components/banana-page/banana-page.js'
             }
         })
     ]

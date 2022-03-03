@@ -8,7 +8,7 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9001/'
+        publicPath: 'http://localhost:9001/static/'
     },
     mode: 'development',
     optimization: {
@@ -71,7 +71,8 @@ module.exports = {
             name: 'HelloWorldApp',
             filename: 'remoteEntry.js',
             exposes: {
-                './HelloWorldButton': './src/components/hello-world-button/hello-world-button.js'
+                './HelloWorldButton': './src/components/hello-world-button/hello-world-button.js',
+                './HelloWorldPage': './src/components/hello-world-page/hello-world-page.js'
             }
         })
     ]

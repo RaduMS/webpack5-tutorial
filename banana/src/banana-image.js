@@ -1,17 +1,5 @@
-import Heading from "./components/heading/heading";
-import BananaImages from "./components/banana-images/banana-images";
-import * as _ from 'lodash';
+import BananaPage from "./components/banana-page/banana-page";
 
-const heading = new Heading();
-const bananaImages = new BananaImages();
+const bananaImage = new BananaPage();
 
-heading.render(_.upperFirst('Banana image'));
-bananaImages.render();
-
-
-import('HelloWorldApp/HelloWorldButton')
-    .then(HelloWorldButtonModule => {
-        const HelloWorldButton = HelloWorldButtonModule.default;
-        const helloWorldButton = new HelloWorldButton;
-        helloWorldButton.render();
-    })
+bananaImage.render();

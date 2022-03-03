@@ -5,27 +5,33 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
-    entry: './src/hello-world.js',
+    entry: './src/dashboard.js',
     output: {
-        filename: '[name].[contenthash].js',
+        filename: '[name].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9001/static/'
+        publicPath: 'http://localhost:9000/static/'
     },
-    mode: 'production',
+    mode: 'development',
     optimization: {
         splitChunks: {
-            chunks: "all",
-            minSize: 1000
+            chunks: "all"
+        }
+    },
+    devServer: {
+        port: 9000,
+        static: {
+            directory: path.resolve(__dirname, './dist')
+        },
+        devMiddleware: {
+            index: 'dashboard.html',
+            writeToDisk: true
+        },
+        historyApiFallback: {
+          index: 'dashboard.html'
         }
     },
     module: {
         rules: [
-            {
-                test: /\.css$/,
-                use: [
-                    MiniCssExtractPlugin.loader, 'css-loader'
-                ]
-            },
             {
                 test: /\.scss$/,
                 use: [
@@ -42,33 +48,20 @@ module.exports = {
                         plugins: ["@babel/plugin-proposal-class-properties"]
                     }
                 }
-            },
-            {
-                test: /\.hbs$/,
-                use: [
-                    "handlebars-loader"
-                ]
             }
         ]
     },
     plugins: [
-        new MiniCssExtractPlugin({
-            filename: '[name].[contenthash].css'
-        }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            filename: "hello-world.html",
-            title: "Hello world!",
-            template: "src/page-template.hbs",
-            description: "Hello world!",
-            minify: false
+            filename: "dashboard.html",
+            title: "Dashboard"
         }),
         new ModuleFederationPlugin({
-            name: 'HelloWorldApp',
-            filename: 'remoteEntry.js',
-            exposes: {
-                './HelloWorldButton': './src/components/hello-world-button/hello-world-button.js',
-                './HelloWorldPage': './src/components/hello-world-page/hello-world-page.js'
+            name: 'App',
+            remotes: {
+                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/static/remoteEntry.js',
+                BananaApp: 'BananaApp@http://localhost:9002/static/remoteEntry.js'
             }
         })
     ]

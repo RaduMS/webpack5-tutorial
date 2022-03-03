@@ -5,11 +5,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
-    entry: './src/hello-world.js',
+    entry: './src/dashboard.js',
     output: {
         filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9001/static/'
+        publicPath: 'http://localhost:9000/static/'
     },
     mode: 'production',
     optimization: {
@@ -20,12 +20,6 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                test: /\.css$/,
-                use: [
-                    MiniCssExtractPlugin.loader, 'css-loader'
-                ]
-            },
             {
                 test: /\.scss$/,
                 use: [
@@ -42,12 +36,6 @@ module.exports = {
                         plugins: ["@babel/plugin-proposal-class-properties"]
                     }
                 }
-            },
-            {
-                test: /\.hbs$/,
-                use: [
-                    "handlebars-loader"
-                ]
             }
         ]
     },
@@ -57,18 +45,15 @@ module.exports = {
         }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            filename: "hello-world.html",
-            title: "Hello world!",
-            template: "src/page-template.hbs",
-            description: "Hello world!",
+            filename: "dashboard.html",
+            title: "Dashboard",
             minify: false
         }),
         new ModuleFederationPlugin({
-            name: 'HelloWorldApp',
-            filename: 'remoteEntry.js',
-            exposes: {
-                './HelloWorldButton': './src/components/hello-world-button/hello-world-button.js',
-                './HelloWorldPage': './src/components/hello-world-page/hello-world-page.js'
+            name: 'App',
+            remotes: {
+                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/static/remoteEntry.js',
+                BananaApp: 'BananaApp@http://localhost:9002/static/remoteEntry.js'
             }
         })
     ]
