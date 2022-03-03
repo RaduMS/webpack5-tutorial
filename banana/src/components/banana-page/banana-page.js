@@ -9,6 +9,12 @@ class BananaPage {
 
         heading.render(_.upperFirst('Banana image'));
         bananaImages.render();
+
+        import('ImageCaptionApp/ImageCaptionPage').then(ImageCaptionModule => {
+            const ImageCaption = ImageCaptionModule.default;
+            const imageCaption = new ImageCaption();
+            imageCaption.render('Bananas are very high in which mineral');
+        })
     }
 }
 

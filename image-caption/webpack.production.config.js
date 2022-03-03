@@ -5,11 +5,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
-    entry: './src/banana-image.js',
+    entry: './src/image-caption.js',
     output: {
         filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9002/static/'
+        publicPath: 'http://localhost:9003/static/'
     },
     mode: 'production',
     optimization: {
@@ -21,17 +21,10 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(png|jpg|ttf)$/,
-                type: 'asset',
-                parser: {
-                    dataUrlCondition: {
-                        maxSize: 3 * 1024
-                    }
-                }
-            },
-            {
-                test: /\.txt/,
-                type: 'asset/source'
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader, 'css-loader'
+                ]
             },
             {
                 test: /\.scss$/,
@@ -45,8 +38,7 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["@babel/env"],
-                        // plugins: ["@babel/plugin-proposal-class-properties"]
+                        presets: ["@babel/env"]
                     }
                 }
             },
@@ -64,20 +56,17 @@ module.exports = {
         }),
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            filename: "banana-image.html",
-            title: "Bananas",
+            filename: "image-caption.html",
+            title: "Image Caption",
             template: "src/page-template.hbs",
-            description: "Some bananas",
+            description: "Image caption",
             minify: false
         }),
         new ModuleFederationPlugin({
-            name: 'BananaApp',
+            name: 'ImageCaptionApp',
             filename: 'remoteEntry.js',
             exposes: {
-                './BananaPage': './src/components/banana-page/banana-page.js'
-            },
-            remotes: {
-                ImageCaptionApp: 'ImageCaptionApp@http://localhost:9003/static/remoteEntry.js'
+                './ImageCaptionPage': './src/components/image-caption/image-caption.js'
             }
         })
     ]

@@ -4,11 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
-    entry: './src/banana-image.js',
+    entry: './src/image-caption.js',
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9002/static/static/'
+        publicPath: 'http://localhost:9003/static/'
     },
     mode: 'development',
     optimization: {
@@ -17,29 +17,22 @@ module.exports = {
         }
     },
     devServer: {
-        port: 9002,
+        port: 9003,
         static: {
             directory: path.resolve(__dirname, './dist')
         },
         devMiddleware: {
-            index: 'banana-image.html',
+            index: 'image-caption.html',
             writeToDisk: true
         }
     },
     module: {
         rules: [
             {
-                test: /\.(png|jpg|ttf)$/,
-                type: 'asset',
-                parser: {
-                    dataUrlCondition: {
-                        maxSize: 3 * 1024
-                    }
-                }
-            },
-            {
-                test: /\.txt/,
-                type: 'asset/source'
+                test: /\.css$/,
+                use: [
+                    'style-loader', 'css-loader'
+                ]
             },
             {
                 test: /\.scss$/,
@@ -53,8 +46,7 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["@babel/env"],
-                        plugins: ["@babel/plugin-proposal-class-properties"]
+                        presets: ["@babel/env"]
                     }
                 }
             },
@@ -69,19 +61,16 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            filename: "banana-image.html",
-            title: "Bananas",
+            filename: "image-caption.html",
+            title: "Image Caption",
             template: "src/page-template.hbs",
-            description: "Some bananas"
+            description: "Image caption"
         }),
         new ModuleFederationPlugin({
-            name: 'BananaApp',
+            name: 'ImageCaptionApp',
             filename: 'remoteEntry.js',
             exposes: {
-                './BananaPage': './src/components/banana-page/banana-page.js'
-            },
-            remotes: {
-                ImageCaptionApp: 'ImageCaptionApp@http://localhost:9003/static/remoteEntry.js'
+                './ImageCaptionPage': './src/components/image-caption/image-caption.js'
             }
         })
     ]
